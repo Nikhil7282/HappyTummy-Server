@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 const userModel=require('../models/Users.model')
 
-const {hashPassword}=require('../config/auth')
+const {hashPassword,compare, createToken}=require('../config/auth');
 /* GET users listing. */
 router.get('/', async function(req, res, next) {
   const users=await userModel.find({})
@@ -35,5 +35,29 @@ router.post('/signUp',async(req,res)=>{
   }
 })
 
+
+router.post('/login',async(req,res)=>{
+  const user=await userModel.findOne({name:req.body.name})
+try {
+  if(user){
+    // console.log(await compare(req.body.password,user.password))
+    // res.send("Done")
+    if(await compare(req.body.password,user.password)){
+      const token=await createToken({
+        username:user.name,
+        id:user._id,
+        role:user.role,
+        email:user.email
+      })
+      return res.status(200).json({message:"User Logged In",token:token})
+    }
+  }
+  else{
+    return res.status(400).json({message:"User not found"})
+  }
+} catch (error) {
+  return res.status(500).json({message:"Internal Error",error:error})
+}
+})
 
 module.exports = router;
