@@ -40,7 +40,8 @@ const adminCheck=async(req,res,next)=>{
     if(req.headers.authorization){
         const token=req.headers.authorization.split(" ")[1]
         const data=await jwt.decode(token)
-        if(data.role==="Admin"){
+        // console.log(data.adminRole);
+        if(data.adminRole){
             next()
         }
         else{
@@ -52,6 +53,6 @@ const adminCheck=async(req,res,next)=>{
 
     }
 }
-module.exports={hashPassword,compare,createToken,validate}
+module.exports={hashPassword,compare,createToken,validate,adminCheck}
 
 

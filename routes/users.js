@@ -2,14 +2,14 @@ var express = require('express');
 var router = express.Router();
 const userModel=require('../models/Users.model')
 
-const {hashPassword,compare, createToken}=require('../config/auth');
+const {hashPassword,compare, createToken,validate,adminCheck}=require('../config/auth');
 /* GET users listing. */
-router.get('/', async function(req, res, next) {
+router.get('/',validate,adminCheck,async function(req, res, next) {
   const users=await userModel.find({})
   if(users.length!==0){
-    res.status(200).json({message:"Users",data:users});
+    return res.status(200).json({message:"Users",data:users});
   }
-  res.status(400).json({message:"No Users Found",data:users});
+  return res.status(400).json({message:"No Users Found",data:users});
 });
 
 router.post('/signUp',async(req,res)=>{
@@ -47,7 +47,8 @@ try {
         username:user.name,
         id:user._id,
         role:user.role,
-        email:user.email
+        email:user.email,
+        adminRole:user.adminRole
       })
       return res.status(200).json({message:"User Logged In",token:token})
     }

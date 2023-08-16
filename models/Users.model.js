@@ -13,8 +13,8 @@ const UserSchema=mongoose.Schema({
         type:String,
         required:true
     },
-    role:{
-        type:String,
+    adminRole:{
+        type:Boolean,
         required:true,
     },
     restaurantName:{
