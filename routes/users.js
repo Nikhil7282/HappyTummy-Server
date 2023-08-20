@@ -29,7 +29,7 @@ router.post('/signUp',async(req,res)=>{
       return res.status(404).json({message:"User already exist"})
     }
   } catch (error) {
-    // console.log(error);
+    console.log(error);
     return res.status(500).json({message:"Internal Error",error:error})
 
   }
@@ -50,7 +50,7 @@ try {
         email:user.email,
         adminRole:user.adminRole
       })
-      return res.status(200).json({message:"User Logged In",token:token})
+      return res.status(200).json({message:"User Logged In",token:token,userId:user._id,username:user.name})
     }
   }
   else{
